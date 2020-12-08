@@ -5,10 +5,17 @@ import blog.news.Repositories.AuthorRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +44,18 @@ public class AuthorController {
 
     @GetMapping("/author")
     public List<AuthorModel> Index () {
-        return (List<AuthorModel>) authorRepositoryManipulator.findAll();
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+
+        System.out.println(context);
+
+        if(auth.isAuthenticated()) {
+            return (List<AuthorModel>) authorRepositoryManipulator.findAll();
+        } else {
+            List<AuthorModel> list = new ArrayList<>();
+            return list;
+        }
     }
 
     @PutMapping("/author")
