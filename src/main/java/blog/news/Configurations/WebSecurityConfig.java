@@ -16,16 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/author").hasRole("USER").and().httpBasic()
-                .and().authorizeRequests().antMatchers(HttpMethod.GET, "/author/login")
-                    .hasRole("USER").and().formLogin().loginProcessingUrl("/author/login");
-    }
-
-    @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
-
-        auth.inMemoryAuthentication().withUser("gustavo").password("{noop}123456").roles("USER");
+        /*http.csrf().disable().authorizeRequests(authorized -> {
+            authorized.antMatchers(HttpMethod.GET, "/author").hasRole("USER").and().;
+        });*/
+        http.csrf().disable();
     }
 }
